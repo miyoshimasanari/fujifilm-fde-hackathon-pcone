@@ -1,0 +1,8 @@
+# data is not distributed with this repository (SDNET2018 / contest files)
+data/
+runs/
+submission.csv
+.venv/
+__pycache__/
+*.pyc
+.DS_Store

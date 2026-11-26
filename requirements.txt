@@ -1,0 +1,8 @@
+# versions used to produce the submission (Python 3.11)
+numpy==2.4.6
+scipy==1.17.1
+opencv-python-headless==5.1.0
+scikit-image==0.26.0
+scikit-learn==1.9.1
+pandas==3.1.1
+# optional, only for the CNN comparison scripts (not used for the submission): torch, torchvision
