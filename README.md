@@ -23,7 +23,7 @@ bash run_all.sh            # 全工程で約3〜5分。最後に submission.csv 
 1. `pcone/mosaic.py data/sdnet data/mosaic_half 0.5`：256px の切り出しを、18列×14行の並び（番号1〜252、左上から行ごと）で元の写真72枚に組み直します（半解像度）。
 2. `pcone/detect_log.py`、`detect_hough.py`、`detect_contour.py`：ラベルを使わない3種類の円検出（LoG、ハフ変換、輪郭の形状）。
 3. `pcone/detect_combined.py`：3つの検出結果を1つにまとめます。
-4. `pcone/make_final.py`：型枠の割付（`pp_grid.py`）、撮影の枠（`pp_border.py`）、ラベルを付けた人の視点（`pp_sliver.py`）の3段を加え、円が触れる切り出しを1とした `submission.csv` を出力します。円検出のスコアの閾値は0.45（公開スコアで確かめた値。学習用ラベルで選んだ値は0.557）、そのほかは学習用ラベルで選んだ値を既定値にしています。
+4. `pcone/make_final.py`：型枠の割付（`pp_grid.py`。スコア0.45以上の円も列そろえの基準にする）、撮影の枠（`pp_border.py`）、ラベルを付けた人の視点（`pp_sliver.py`）の3段を加え、円が触れる切り出しを1とした `submission.csv` を出力します。円検出のスコアの閾値は0.45（公開スコアで確かめた値。学習用ラベルで選んだ値は0.557）、そのほかは学習用ラベルで選んだ値を既定値にしています。
 
 ## 検証の再現（任意）
 - `pcone/eval_detect.py data/detect/combined/detections.csv --out runs/det_combined`：円検出だけのとき、学習用ラベルで閾値とδを選びます。
@@ -44,7 +44,7 @@ bash run_all.sh            # 全工程で約3〜5分。最後に submission.csv 
 ## 方針と結果の詳細
 - 現場の前提ごとの検証結果（採用した前提と、崩れた前提）は [docs/FIELD_PREMISES.md](docs/FIELD_PREMISES.md) を参照してください。
 - 学習用の40枚の写真を写真単位で分けた入れ子交差検証では、F1は 0.9618（円検出のみ）から 0.9679（現場の前提を3つ追加）になりました。
-- 学習用ラベルで選んだ閾値0.557での公開スコアは 0.921 でした。判定を1か所ずつずらした版で確かめた結果、閾値を0.45にした版が 0.945 で最も高く、これを最終版にしました。
+- 学習用ラベルで選んだ閾値0.557での公開スコアは 0.921 でした。判定を1か所ずつずらした版で確かめた結果、閾値を0.45にした版が 0.945 でした。さらに列そろえの基準を広げた版（スコア0.45以上の円も基準の跡にする）が 0.947 となり、これを最終版にしました（`--no-grid-relax` を付けると、広げる前の版を出力します）。
 
 ## データについて
 SDNET2018（Maguire, M., Dorafshan, S., & Thomas, R. J. (2018). SDNET2018: A concrete crack image dataset for machine learning applications. Utah State University. https://doi.org/10.15142/T3TD19, CC BY 4.0）とコンテストの配布物は、このリポジトリに含めていません。
